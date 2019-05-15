@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thangtruong19.weatherapp.adapter.ForecastAdapter;
 import com.thangtruong19.weatherapp.data.SunshineReference;
@@ -19,7 +20,8 @@ import com.thangtruong19.weatherapp.util.OpenWeatherJsonUtils;
 
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements ForecastAdapter.ForecastAdapterOnClickListener{
 
     TextView mErrorTextView;
     ProgressBar mLoadingIndicator;
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         mRecycleView.setLayoutManager(layoutManager);
         mRecycleView.setHasFixedSize(true);
 
-        mForecastAdapter = new ForecastAdapter();
+        mForecastAdapter = new ForecastAdapter(this);
         mRecycleView.setAdapter(mForecastAdapter);
 
         String location = SunshineReference.getPreferencedWeatherLocation(this);
@@ -57,6 +59,12 @@ public class MainActivity extends AppCompatActivity {
     public void showErrorMessage(){
         mRecycleView.setVisibility(View.INVISIBLE);
         mErrorTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(String weatherForDay) {
+        Toast toast = Toast.makeText(this,weatherForDay,Toast.LENGTH_LONG);
+        toast.show();
     }
 
     class FetchWeatherTask extends AsyncTask<String,Void,String[]>{

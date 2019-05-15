@@ -16,8 +16,13 @@ import com.thangtruong19.weatherapp.R;
 public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ForecastViewHolder> {
     private String[] mWeatherData;
     private TextView mWeatherTextView;
+    private ForecastAdapterOnClickListener mClickHandler;
 
-    public ForecastAdapter(){
+    public interface ForecastAdapterOnClickListener{
+        void onClick(String weatherForDay);
+    }
+    public ForecastAdapter(ForecastAdapterOnClickListener clickHandler){
+        mClickHandler = clickHandler;
     }
 
     @NonNull
@@ -47,11 +52,20 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         notifyDataSetChanged();
     }
 
-    class ForecastViewHolder extends RecyclerView.ViewHolder{
+    class ForecastViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener{
 
         public ForecastViewHolder(View itemView){
             super(itemView);
             mWeatherTextView = itemView.findViewById(R.id.tv_weather_data);
+            mWeatherTextView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int adapterPosition = getAdapterPosition();
+            String weatherData = mWeatherData[adapterPosition];
+            mClickHandler.onClick(weatherData);
         }
     }
 }
